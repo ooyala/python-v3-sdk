@@ -18,7 +18,7 @@ API_VERSION = 'v2'
 DEFAULT_BASE_URL = 'api.ooyala.com'
 DEFAULT_CACHE_BASE_URL = 'cdn-api.ooyala.com'
 
-logging.basicConfig(format='',level=logging.DEBUG)
+logging.basicConfig(format='',level=logging.INFO)
 
 class OoyalaAPI(object):
     def __init__(self, 
@@ -126,7 +126,7 @@ class OoyalaAPI(object):
         """
         return self.send_request('PUT', path, body)
 
-    def post(self, path, body):
+    def post(self, path, body, query={}):
         """Send a POST request.
         Type signature:
             (str, object) -> json str | None
@@ -137,7 +137,7 @@ class OoyalaAPI(object):
             api = Ooyala(...)
             response = api.post('players/', {'name' : 'sample player'})
         """
-        return self.send_request('POST', path, body)
+        return self.send_request('POST', path, body, query)
 
     def patch(self, path, body):
         """Send a PATCH request.
@@ -194,7 +194,7 @@ class OoyalaAPI(object):
             params      - the query parameters
         """
         # a local function which check if item is a query param
-        f = lambda k: k == 'where' or k == 'orderby' or k == 'limit' or k == 'page_token'
+        f = lambda k: k == 'where' or k == 'orderby' or k == 'limit' or k == 'page_token' or k == 'version'
         url = path + '?'
         url += "&".join(["%s=%s" % (key, urllib.parse.quote_plus(str(value)) if f(key) else value) for key, value in list(params.items())])
         return url
